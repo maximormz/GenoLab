@@ -3,35 +3,38 @@ import os
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Cargar archivos de genomas
-def load_genome_file(filename):
-    return 
+def load_genome_file(filename='SARS-COV-2-MT106054.1.txt'):
+    file_path = os.path.join(current_dir,'..','data',filename)
+    normalized_path = os.path.normpath(file_path)
+
+    genome = {}
+
+    with open(normalized_path, 'r') as file:
+        for line in file:
+            if line.startswith('>'):
+                genome_name = line[1:].strip().split('S',1)
+                genome_name = genome_name[0]
+                genome[genome_name] = ''
+            elif not line.startswith('>'):
+                genome[genome_name] += line.strip()
+
+    return genome
 
 # Cargar archivos de genes
-def load_gene_file(filename='gen-M.txt'):
+def load_gene_file(filename):
     file_path = os.path.join(current_dir,'..','data',filename)
     normalized_path = os.path.normpath(file_path)
 
     gene = {}
-    gene_name = None
     with open(normalized_path, 'r') as file:
         for line in file:
             if line.startswith('>'):
                 gene_name = line[1:].strip().split('S',1)
                 gene_name = gene_name[0]
                 gene[gene_name] = ''
-            elif gene_name is not None and not line.startswith('>'):
+            elif not line.startswith('>'):
                 gene[gene_name] += line.strip()
     return gene
-
-GEN = load_gene_file()
-for key in GEN:
-    print(F'{key}: {GEN[key]}')
-
-'''
-Encontrar el palíndromo mas largo en cada uno de los tres genes (gen M, S y ORF1AB). Los palíndromos son importantes, porque son regiones propensas a mutaciones en un gen. 
-
-Por cada gen, muestra la longitud del palíndromo mas largo y guárdalo en un archivo.
-'''
 
 # Cargar archivo de proteínas
 def load_protein_file(filename):
