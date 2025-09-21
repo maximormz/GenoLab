@@ -9,16 +9,20 @@ def load_genome_file(filename='SARS-COV-2-MT106054.1.txt'):
 
     genome = {}
 
-    with open(normalized_path, 'r') as file:
-        for line in file:
-            if line.startswith('>'):
-                genome_name = line[1:].strip().split('S',1)
-                genome_name = genome_name[0]
-                genome[genome_name] = ''
-            elif not line.startswith('>'):
-                genome[genome_name] += line.strip()
+    try:
+        with open(normalized_path, 'r') as file:
+            for line in file:
+                if line.startswith('>'):
+                    genome_name = line[1:].strip().split('S',1)
+                    genome_name = genome_name[0]
+                    genome[genome_name] = ''
+                elif not line.startswith('>'):
+                    genome[genome_name] += line.strip()
 
-    return genome
+        return genome
+    except FileNotFoundError:
+        print(f"Error: El archivo '{filename}' no se encontró en {normalized_path}.")
+        return {}
 
 # Cargar archivos de genes
 def load_gene_file(filename):
@@ -26,15 +30,20 @@ def load_gene_file(filename):
     normalized_path = os.path.normpath(file_path)
 
     gene = {}
-    with open(normalized_path, 'r') as file:
-        for line in file:
-            if line.startswith('>'):
-                gene_name = line[1:].strip().split('S',1)
-                gene_name = gene_name[0]
-                gene[gene_name] = ''
-            elif not line.startswith('>'):
-                gene[gene_name] += line.strip()
-    return gene
+
+    try:
+        with open(normalized_path, 'r') as file:
+            for line in file:
+                if line.startswith('>'):
+                    gene_name = line[1:].strip().split('S',1)
+                    gene_name = gene_name[0]
+                    gene[gene_name] = ''
+                elif not line.startswith('>'):
+                    gene[gene_name] += line.strip()
+        return gene
+    except FileNotFoundError:
+        print(f"Error: El archivo '{filename}' no se encontró en {normalized_path}.")
+        return {}
 
 # Cargar archivo de proteínas
 def load_protein_file(filename):
@@ -43,15 +52,20 @@ def load_protein_file(filename):
 
     proteins = {}
     protein_name = None
-    with open(normalized_path, 'r') as file:
-        for line in file:
-            if line.startswith('>'):
-                protein_name = line[1:].strip()
-                proteins[protein_name] = ''
-            elif protein_name is not None and not line.startswith('>'):
-                proteins[protein_name] += line.strip()
 
-    return proteins
+    try:
+        with open(normalized_path, 'r') as file:
+            for line in file:
+                if line.startswith('>'):
+                    protein_name = line[1:].strip()
+                    proteins[protein_name] = ''
+                elif protein_name is not None and not line.startswith('>'):
+                    proteins[protein_name] += line.strip()
+
+        return proteins
+    except FileNotFoundError:
+        print(f"Error: El archivo '{filename}' no se encontró en {normalized_path}.")
+        return {}
 
 # Limpiar secuencias (espacios, saltos)
 def clean_sequence(sequence):
