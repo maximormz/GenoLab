@@ -1,0 +1,1 @@
+# PUNTO 4: Comparación Wuhan vs Texas
