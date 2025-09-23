@@ -3,7 +3,7 @@ import os
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Cargar archivos de genomas
-def load_genome_file(filename='SARS-COV-2-MT106054.1.txt'):
+def load_genome_file(filename):
     file_path = os.path.join(current_dir,'..','data',filename)
     normalized_path = os.path.normpath(file_path)
 
