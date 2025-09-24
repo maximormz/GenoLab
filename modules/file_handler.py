@@ -67,9 +67,26 @@ def load_protein_file(filename):
         print(f"Error: El archivo '{filename}' no se encontró en {normalized_path}.")
         return {}
 
-# Limpiar secuencias (espacios, saltos)
-def clean_sequence(sequence):
-    return 
+# Retornar todos los archivos cargados
+def load_all_files():
+    genome_data_1 = load_genome_file('SARS-COV-2-MN908947.3.txt')
+    genome_data_2 = load_genome_file('SARS-COV-2-MT106054.1.txt')
+    gene_M_data = load_gene_file('gen-M.txt')
+    gene_S_data = load_gene_file('gen-S.txt')
+    gene_ORF1AB_data = load_gene_file('gen-ORF1AB.txt')
+    protein_data = load_protein_file('seq-proteins.txt')
+
+    return {
+        'genome': {
+            'MN908947.3' : genome_data_1,
+            'MT106054.1' : genome_data_2},
+        'genes': {
+            'M': gene_M_data,
+            'S': gene_S_data,
+            'ORF1AB': gene_ORF1AB_data
+        },
+        'proteins': protein_data
+    }
 
 # Guardar resultados 
 def save_results_to_file(data, filename):
