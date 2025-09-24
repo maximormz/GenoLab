@@ -7,17 +7,13 @@ def load_genome_file(filename):
     file_path = os.path.join(current_dir,'..','data',filename)
     normalized_path = os.path.normpath(file_path)
 
-    genome = {}
+    genome = ''
 
     try:
         with open(normalized_path, 'r') as file:
             for line in file:
-                if line.startswith('>'):
-                    genome_name = line[1:].strip().split('S',1)
-                    genome_name = genome_name[0]
-                    genome[genome_name] = ''
-                elif not line.startswith('>'):
-                    genome[genome_name] += line.strip()
+                if not line.startswith('>'):
+                    genome += line
 
         return genome
     except FileNotFoundError:
@@ -28,18 +24,12 @@ def load_genome_file(filename):
 def load_gene_file(filename):
     file_path = os.path.join(current_dir,'..','data',filename)
     normalized_path = os.path.normpath(file_path)
-
-    gene = {}
-
+    gene = ''
     try:
         with open(normalized_path, 'r') as file:
             for line in file:
-                if line.startswith('>'):
-                    gene_name = line[1:].strip().split('S',1)
-                    gene_name = gene_name[0]
-                    gene[gene_name] = ''
-                elif not line.startswith('>'):
-                    gene[gene_name] += line.strip()
+                if not line.startswith('>'):
+                    gene += line
         return gene
     except FileNotFoundError:
         print(f"Error: El archivo '{filename}' no se encontró en {normalized_path}.")
