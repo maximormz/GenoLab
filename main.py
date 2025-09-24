@@ -1,8 +1,6 @@
 from modules.file_handler import load_all_files
 from modules.gene_finder import find_genes_index
 
-# PUNTO 1: Búsqueda de genes en genoma
-
 if __name__ == "__main__":
     print("===Analisis Genomico de SARS-COV-2===\n")
 
