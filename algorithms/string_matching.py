@@ -1,4 +1,7 @@
 def kmp_search_all_occurrences(text, pattern): # Retorna un generador (Convertir en lista al recibirlo)
+    if not text or not pattern:
+        return
+    
     n = len(text)
     m = len(pattern)
 
@@ -10,14 +13,16 @@ def kmp_search_all_occurrences(text, pattern): # Retorna un generador (Convertir
         if text[i] == pattern[j]:
             i += 1
             j += 1
+
+            if j == m:
+                yield i - m
+                j = failure_table[j-1]
         else:
             if j > 0:
                 j = failure_table[j-1]
             else:
                 i += 1
-        if j == m:
-            yield i - m
-            j = failure_table[j-1]
+
     
 
 def build_failure_table(pattern):
