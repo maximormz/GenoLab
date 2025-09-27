@@ -37,11 +37,11 @@ def manacherAlgorithm(text):
     end = start + max_len
 
     longest_palindrome = text[start:end]
-
+    palindrome_position = text.find(longest_palindrome)
     return {
-        'longest_palindrome': longest_palindrome,
+        'sequence': longest_palindrome,
         'length': max_len,
-        'P_array': P
+        'position': palindrome_position,
     }
 
 def palindrom_test():
@@ -51,5 +51,3 @@ def palindrom_test():
     # Probar con otros ejemplos
     print(f"Palíndromo más largo: {manacherAlgorithm("babad")}")  # Debería devolver "bab" o "aba"
     print(f"Palíndromo más largo: {manacherAlgorithm("cbbd")}")   # Debería devolver "bb"
-
-palindrom_test()
