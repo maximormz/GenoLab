@@ -23,8 +23,6 @@ def kmp_search_all_occurrences(text, pattern): # Retorna un generador (Convertir
             else:
                 i += 1
 
-    
-
 def build_failure_table(pattern):
     """Construye tabla de fallos para KMP"""
     n = len(pattern)
