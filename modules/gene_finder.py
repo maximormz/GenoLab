@@ -7,36 +7,29 @@ Por cada gen muestra su nombre, índices de aparición en la secuencia del virus
 
 from algorithms.string_matching import kmp_search_all_occurrences
 
-def get_reverse_complement(sequence):
-    complement_map = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G'}
-    
-    # Crear complemento
-    complement = ''.join(complement_map.get(base, base) for base in sequence.upper())
-    
-    # Reverso del complemento
-    reverse_complement = complement[::-1]
-    
-    return reverse_complement
-
 def find_genes_index(genome_sequence, gene_sequence): 
+    if not genome_sequence:
+        print("⚠️  Advertencia: La secuencia del genoma está vacía")
+        return {}
+    if not gene_sequence:
+        print("⚠️  Advertencia: No hay secuencias de genes para buscar")
+        return {}
+    
     results = {}
 
-    for gene_name in gene_sequence.keys():
+    for gene_name,sequence in gene_sequence.items():
+        if not sequence:
+            print(f"⚠️  Advertencia: Secuencia vacía para el gen {gene_name}")
+            continue
         
-        Index = list(kmp_search_all_occurrences(genome_sequence, gene_sequence[gene_name]))
+        direct_indexes = list(kmp_search_all_occurrences(genome_sequence, sequence))
 
-        reverse_comp_index = []
-        if not Index:
-            reverse_complement = get_reverse_complement(gene_sequence[gene_name])
-            reverse_comp_index = list(kmp_search_all_occurrences(genome_sequence, reverse_complement))
-        
-        all_indexes = Index + reverse_comp_index
         results[gene_name] = {
-            'indexes': all_indexes,
-            'sequence': gene_sequence[gene_name],
-            'first_12': gene_sequence[gene_name][:12],
-            'last_12': gene_sequence[gene_name][-12:],
-            'found_as': 'indexes' if Index else 'reverse_complement' if reverse_comp_index else 'not found'
+            'indexes': direct_indexes,
+            'sequence': sequence,
+            'first_12': sequence[:12],
+            'last_12': sequence[-12:],
+            'length': len(sequence)
         }
 
         display_gene_results(gene_name, results[gene_name])
@@ -45,18 +38,17 @@ def find_genes_index(genome_sequence, gene_sequence):
 
 def display_gene_results(gene_name, result):
     """Muestra los resultados de búsqueda para un gen"""
+
     if result['indexes']:
         indexes_str = ', '.join(map(str, result['indexes']))
-        print(f"✅ Gen {gene_name}: Índices [{indexes_str}], Primeros 12: \"{result['first_12']}\", Ultimos 12: \",{result['last_12']}\"")
+        print(f"✅ Gen {gene_name}: Índices [{indexes_str}], Primeros 12: \"{result['first_12']}...\", Ultimos 12: \",...{result['last_12']}\"")
+        print(f"   📏 Longitud del gen: {result['length']} nucleótidos")
         
-        if result['found_as'] == 'reverse_complement':
-            print(f"   ⚠️  Encontrado como complemento reverso")
     else:
         print('-'*50)
         print(f"❌ Gen {gene_name}: No encontrado")
-        print(f"   🔍 Buscando: \"{result['first_12']}...\"")
-        print(f"   ❗ Últimos 12: \"{result['last_12']}\"")
-        print(f"   📏 Longitud del gen: {len(result['sequence'])} nucleótidos")
+        print(f"   🔍 Buscando: \"{result['first_12']}...{result['last_12']}\"")
+        print(f"   📏 Longitud del gen: {result['length']} nucleótidos")
 
 def gene_test():
     print("🧪 TEST: Búsqueda de genes en genoma")
@@ -80,5 +72,4 @@ def gene_test():
             print(f"   Índices: {result['indexes']}")
             print(f"   Primeros 12: \"{result['first_12']}\"")
             print(f"   Últimos 12: \"{result['last_12']}\"")
-            print(f"   Tipo: {result['found_as']}")
         print()

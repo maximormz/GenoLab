@@ -17,8 +17,12 @@ def save_palindrome_to_file(gene_name, palindrome_sequence):
     filename = f"{results_dir}/palindrome_gene_{gene_name}.txt"
 
     try:
-        with open(filename, 'w') as file:
-            file.write(palindrome_sequence)
+        with open(filename, 'w', encoding="utf-8") as file:
+            file.write(
+                f"   📏 Palíndromo más largo: {palindrome_sequence['length']}\n"
+                f"   📍 Posición en el gen: {palindrome_sequence['position']}\n"
+                f"   🔤 Secuencia: {palindrome_sequence['sequence']}\n"
+            )
 
         print(f"   💾 Palíndromo guardado en: {filename}")
         return filename
@@ -44,14 +48,14 @@ def analyze_palindromes_in_genes(gene_sequence):
         print(f"\n🧬 Analizando palíndromos en Gen {gene_name}...")
 
         longest_palindrome = manacherAlgorithm(gene_sequence)
-        #file_name = save_palindrome_to_file(gene_name,longest_palindrome)
+        file_name = save_palindrome_to_file(gene_name,longest_palindrome)
 
         results[gene_name] = {
             'gene_sequence': gene_sequence,
             'longest_palindrome': longest_palindrome['sequence'],
             'palindrome_length': longest_palindrome['length'],
             'palindrome_position': longest_palindrome['position'],
-            'saved_to_file' : None #file_name
+            'saved_to_file' : file_name
         }
 
         display_palindrome_results(gene_name,results[gene_name])

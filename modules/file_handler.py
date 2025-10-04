@@ -13,12 +13,12 @@ def load_genome_file(filename):
         with open(normalized_path, 'r') as file:
             for line in file:
                 if not line.startswith('>'):
-                    genome += line
+                    genome += line.strip("\n")
 
         return genome
     except FileNotFoundError:
         print(f"Error: El archivo '{filename}' no se encontró en {normalized_path}.")
-        return {}
+        return ""
 
 # Cargar archivos de genes
 def load_gene_file(filename):
@@ -29,11 +29,11 @@ def load_gene_file(filename):
         with open(normalized_path, 'r') as file:
             for line in file:
                 if not line.startswith('>'):
-                    gene += line
+                    gene += line.strip("\n")
         return gene
     except FileNotFoundError:
         print(f"Error: El archivo '{filename}' no se encontró en {normalized_path}.")
-        return {}
+        return ""
 
 # Cargar archivo de proteínas
 def load_protein_file(filename):
@@ -55,7 +55,7 @@ def load_protein_file(filename):
         return proteins
     except FileNotFoundError:
         print(f"Error: El archivo '{filename}' no se encontró en {normalized_path}.")
-        return {}
+        return ""
 
 # Retornar todos los archivos cargados
 def load_all_files():
