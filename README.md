@@ -1,7 +1,6 @@
 # 🧬 Análisis Genómico del SARS-COV-2
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Complete-success.svg)]()
 
 Sistema computacional para análisis bioinformático del virus SARS-CoV-2 mediante algoritmos eficientes de procesamiento de cadenas.
