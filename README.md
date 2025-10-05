@@ -182,11 +182,7 @@ analisis-sars-cov2/
 │   ├── palindrome_finder.py    # Algoritmo de palíndromos
 │   └── sequence_translator.py  # Traducción ADN → Proteínas
 │
-├── utils/                       # Utilidades auxiliares
-│   ├── sequence_utils.py       # Manipulación de secuencias
-│   └── output_formatter.py     # Formateo de resultados
-│
-└── results/                     # Archivos de salida generados
+└── results/                     # Archivos de salida generados (Creados al momento de correr el codigo)
     ├── palindromo_gen_M.txt
     ├── palindromo_gen_S.txt
     ├── palindromo_gen_ORF1AB.txt
