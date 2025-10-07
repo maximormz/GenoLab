@@ -32,7 +32,7 @@ STOP_CODONS = ['TAA', 'TAG', 'TGA']      # Codones de parada
 # LECTURA AUTOMATICA DE ARCHIVOS
 # Cargar archivos de genomas
 def load_genome_file(filename):
-    file_path = os.path.join(current_dir,'..','data',filename)
+    file_path = os.path.join(current_dir,filename)
     normalized_path = os.path.normpath(file_path)
 
     genome = ''
@@ -50,7 +50,7 @@ def load_genome_file(filename):
 
 # Cargar archivos de genes
 def load_gene_file(filename):
-    file_path = os.path.join(current_dir,'..','data',filename)
+    file_path = os.path.join(current_dir,filename)
     normalized_path = os.path.normpath(file_path)
     gene = ''
     try:
@@ -65,7 +65,7 @@ def load_gene_file(filename):
 
 # Cargar archivo de proteínas
 def load_protein_file(filename):
-    file_path = os.path.join(current_dir,'..','data',filename)
+    file_path = os.path.join(current_dir,filename)
     normalized_path = os.path.normpath(file_path)
 
     proteins = {}
@@ -96,8 +96,8 @@ def load_all_files():
 
     return {
         'genome': {
-            'MN908947.3' : genome_data_1,
-            'MT106054.1' : genome_data_2},
+            'Wuhan_2019' : genome_data_1,
+            'Texas_2020' : genome_data_2},
         'genes': {
             'M': gene_M_data,
             'S': gene_S_data,
@@ -105,10 +105,6 @@ def load_all_files():
         },
         'proteins': protein_data
     }
-
-# Guardar resultados 
-def save_results_to_file(data, filename):
-    return 
 
 # ------------------------------------------------------------------------
 
@@ -251,30 +247,6 @@ def display_gene_results(gene_name, result):
         print(f"   🔍 Buscando: \"{result['first_12']}...{result['last_12']}\"")
         print(f"   📏 Longitud del gen: {result['length']} nucleótidos")
 
-def gene_test():
-    print("🧪 TEST: Búsqueda de genes en genoma")
-    
-    test_genome = "ATGCTAGCTAGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG"
-    test_genes = {
-        'gen_M': "TAGCTAGATCGA",
-        'gen_S': "ATCGATCGATCG", 
-        'gen_ORF1AB': "GATCGATCGATC"
-    }
-    
-    print(f"Genoma de prueba: {test_genome[:20]}... (longitud: {len(test_genome)})")
-    
-    # Ejecutar búsqueda
-    results = find_genes_index(test_genome, test_genes)
-    
-    for gene_name, result in results.items():
-        status = "✅ ENCONTRADO" if result['indexes'] else "❌ NO ENCONTRADO"
-        print(f"\n{gene_name}: {status}")
-        if result['indexes']:
-            print(f"   Índices: {result['indexes']}")
-            print(f"   Primeros 12: \"{result['first_12']}\"")
-            print(f"   Últimos 12: \"{result['last_12']}\"")
-        print()
-
 # ------------------------------------------------------------------------
 
 # FUNCIONES DEL PUNTO 2
@@ -312,7 +284,7 @@ def display_palindrome_results(gene_name, result):
 def analyze_palindromes_in_genes(gene_sequence): 
     results = {}
     for gene_name, gene_sequence in gene_sequence.items():
-        print(f"\n🧬 Analizando palíndromos en Gen {gene_name}...")
+        print(f"\n🔬 Analizando palíndromos en Gen {gene_name}...")
 
         longest_palindrome = manacherAlgorithm(gene_sequence)
         file_name = save_palindrome_to_file(gene_name,longest_palindrome)
@@ -329,22 +301,28 @@ def analyze_palindromes_in_genes(gene_sequence):
 
     return results
 
-def palindrome_test():
-    print("🧪 TEST: Análisis de palíndromos")
-    
-    # Genes de prueba con palíndromos conocidos
-    test_genes = {
-        'Test_1': 'ATGCCCGAATTCGGGCATGCATGCCCGAATTCGGGCAT',  # GCCCG
-        'Test_2': 'ATGTTTAAATTTCCCGGGGAAATTTAAATTTGGG',      # Contiene TTTAAATTT
-        'Test_3': 'ATGGAGCTCGAGCTCGAGCTCGAGCTCCCAT'          # Contiene GAGCTCGAGCTCGAGCTCGAG
-    }
-    
-    # Analizar palíndromos de prueba
-    test_results = analyze_palindromes_in_genes(test_genes)
-
 # ------------------------------------------------------------------------
 
 # FUNCIONES DEL PUNTO 3
+CODON_TABLE_mapper = {
+    'TTT': 'F', 'TTC': 'F', 'TTA': 'L', 'TTG': 'L',
+    'CTT': 'L', 'CTC': 'L', 'CTA': 'L', 'CTG': 'L',
+    'ATT': 'I', 'ATC': 'I', 'ATA': 'I', 'ATG': 'M',
+    'GTT': 'V', 'GTC': 'V', 'GTA': 'V', 'GTG': 'V',
+    'TCT': 'S', 'TCC': 'S', 'TCA': 'S', 'TCG': 'S',
+    'CCT': 'P', 'CCC': 'P', 'CCA': 'P', 'CCG': 'P',
+    'ACT': 'T', 'ACC': 'T', 'ACA': 'T', 'ACG': 'T',
+    'GCT': 'A', 'GCC': 'A', 'GCA': 'A', 'GCG': 'A',
+    'TAT': 'Y', 'TAC': 'Y', 'TAA': '', 'TAG': '',
+    'CAT': 'H', 'CAC': 'H', 'CAA': 'Q', 'CAG': 'Q',
+    'AAT': 'N', 'AAC': 'N', 'AAA': 'K', 'AAG': 'K',
+    'GAT': 'D', 'GAC': 'D', 'GAA': 'E', 'GAG': 'E',
+    'TGT': 'C', 'TGC': 'C', 'TGA': '*', 'TGG': 'W',
+    'CGT': 'R', 'CGC': 'R', 'CGA': 'R', 'CGG': 'R',
+    'AGT': 'S', 'AGC': 'S', 'AGA': 'R', 'AGG': 'R',
+    'GGT': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G'
+}
+
 def read_fasta(path):
     header = None
     seq_lines = []
@@ -387,17 +365,16 @@ def read_proteins(path):
 
 def translate_dna(dna, frame=0):
     aa = []
-    for i in range(frame, len(dna)-2, 3):
+    for i in range(frame, len(dna) - 2, 3):
         codon = dna[i:i+3]
-        aa.append(CODON_TABLE.get(codon, 'X'))
+        aa.append(CODON_TABLE_mapper.get(codon, 'X'))
     return ''.join(aa)
 
 def kmp_search_all(text, pattern):
     if not pattern:
         return []
-    # Construccion de LPS
     m = len(pattern)
-    lps = [0]*m
+    lps = [0] * m
     length = 0
     i = 1
     while i < m:
@@ -407,11 +384,11 @@ def kmp_search_all(text, pattern):
             i += 1
         else:
             if length != 0:
-                length = lps[length-1]
+                length = lps[length - 1]
             else:
                 lps[i] = 0
                 i += 1
-    # Search
+
     res = []
     n = len(text)
     i = j = 0
@@ -420,14 +397,33 @@ def kmp_search_all(text, pattern):
             i += 1
             j += 1
             if j == m:
-                res.append(i-j)
-                j = lps[j-1]
+                res.append(i - j)
+                j = lps[j - 1]
         else:
             if j != 0:
-                j = lps[j-1]
+                j = lps[j - 1]
             else:
                 i += 1
     return res
+
+def verify_slippery(genome, nt_start, aa_target, max_aa=120):
+    i_aa = 0
+    shift = False
+    while i_aa < min(max_aa, len(aa_target)):
+        codon = genome[nt_start:nt_start + 3]
+        if len(codon) < 3:
+            break
+        aa = CODON_TABLE_mapper.get(codon, "X")
+        if aa == aa_target[i_aa]:
+            nt_start += 3
+            i_aa += 1
+            continue
+        if not shift:
+            nt_start += 1
+            shift = True
+            continue
+        break
+    return i_aa
 
 def map_protein_to_genome(protein_seq, genome_seq):
     protein_seq = protein_seq.upper()
@@ -436,37 +432,88 @@ def map_protein_to_genome(protein_seq, genome_seq):
         translated = translate_dna(genome_seq, frame)
         occs = kmp_search_all(translated, protein_seq)
         for occ in occs:
-            start_nt = frame + occ*3 + 1    # 1-based
-            end_nt = start_nt + len(protein_seq)*3 - 1
+            start_nt = frame + occ * 3 + 1
+            end_nt = start_nt + len(protein_seq) * 3 - 1
             results.append((frame, occ, start_nt, end_nt))
+
+    if not results:
+        pref = protein_seq[:8]
+        for frame in range(3):
+            i = frame
+            while i <= len(genome_seq) - 3:
+                match_len = verify_slippery(genome_seq, i, pref, max_aa=120)
+                if match_len >= len(pref) - 1:
+                    start_nt = i + 1
+                    end_nt = start_nt + match_len * 3 - 1
+                    occ = i // 3
+                    results.append((frame, occ, start_nt, end_nt))
+                    return results  # Retornar el primer match con slippery
+                else:
+                    i += 3
     return results
 
-    # Uso de map_all_proteins  "data/SARS-COV-2-MN908947.3.txt" y "data/seq-proteins.txt"
-def map_all_proteins(genome_file, proteins_file):
-    _, genome = read_fasta(genome_file)
+def print_information(mapping):
+    total_found = sum(1 for v in mapping.values() if v)
+    total_notfound = sum(1 for v in mapping.values() if not v)
+    print(f"Total proteinas: {len(mapping)} | Encontradas: {total_found} | No encontradas: {total_notfound}")
+    print("-------------------------------------------------------")
+    print(f"{'🧬 ID':<8} {' 🧪 Frame':<8} {' 🏁 Inicio':<9} {' 🏁 Fin':<10} {'📏 Longitud':<12} {'✅ Estado'}")
+    print("-" * 65)
+
+    for pid, results in mapping.items():
+        if results:
+            for frame, occ, start_nt, end_nt in results:
+                length = end_nt - start_nt + 1
+                print(f"{pid:<15} {frame:<7} {start_nt:<10} {end_nt:<10} {length:<10} {'OK'}")
+        else:
+            print(f"{pid:<15} {'-':<7} {'-':<10} {'-':<10} {'-':<10} {'NO'}")
+
+    print("-" * 65)
+    print("=======================================================")
+
+def map_all_proteins(WuhanGenome, proteins_file):
     proteins = read_proteins(proteins_file)
     mapping = {}
     for pid, pseq in proteins.items():
-        mapping[pid] = map_protein_to_genome(pseq, genome)
-    return mapping
-
-if __name__ == "__main__":
-    import json, sys
-    genome_file = sys.argv[1] if len(sys.argv)>1 else "data/SARS-COV-2-MN908947.3.txt"
-    proteins_file = sys.argv[2] if len(sys.argv)>2 else "data/seq-proteins.txt"
-    m = map_all_proteins(genome_file, proteins_file)
-    print(json.dumps({k: v for k,v in m.items()}, indent=2))
+        mapping[pid] = map_protein_to_genome(pseq, WuhanGenome)
+    return print_information(mapping)
 
 # ------------------------------------------------------------------------
 
 # FUNCIONES DEL PUNTO 4
+def compare_genomes_table(Genome_Name,WuhanGenome, TexasGenome, max_difs=50):
+    """Compara dos genomas y muestra diferencias en tabla organizada"""
+    seq1 = WuhanGenome
+    seq2 = TexasGenome
 
+    difs = []
+    n = min(len(seq1), len(seq2))
+
+    for i in range(n):
+        if seq1[i] != seq2[i]:
+            codon_i = i - (i % 3)
+            codon1 = seq1[codon_i:codon_i + 3]
+            codon2 = seq2[codon_i:codon_i + 3]
+            aa1 = CODON_TABLE.get(codon1, "X") if len(codon1) == 3 else "X"
+            aa2 = CODON_TABLE.get(codon2, "X") if len(codon2) == 3 else "X"
+            difs.append((i, codon1, aa1, codon2, aa2))
+
+    print(f"\nDiferencias entre {Genome_Name[0]} y {Genome_Name[1]} (max {max_difs}): {len(difs)}\n")
+    print(f"{'Pos':>5}  {Genome_Name[0]:^10}  AA  {Genome_Name[1]:^10}  AA")
+    print("-" * 40)
+
+    for d in difs[:max_difs]:
+        print(f"{d[0]:5d}  {d[1]:^10}  {d[2]}  {d[3]:^10}  {d[4]}")
+
+    if len(difs) > max_difs:
+        print(f"... y {len(difs) - max_difs} más diferencias")
+
+    return difs
 
 # ------------------------------------------------------------------------
 
-
 if __name__ == "__main__":
-    print("===Analisis Genomico de SARS-COV-2===\n")
+    print("\n===Analisis Genomico de SARS-COV-2===\n")
 
     print("Cargando archivos...\n")
     print("-"*50)
@@ -475,21 +522,20 @@ if __name__ == "__main__":
     print("🎯 PUNTO 1: Búsqueda de Genes")
     print("=" * 50)
 
-    #gene_test()
-    find_genes_index(files_data['genome']['MN908947.3'], files_data['genes'])
-
+    find_genes_index(files_data['genome']['Wuhan_2019'], files_data['genes'])
+    
     print("\n🔄 PUNTO 2: Palíndromos | (Regiones Propensas a mutación)")
     print("=" * 50)
 
-    #palindrome_test()
     analyze_palindromes_in_genes(files_data['genes'])
 
     print("\n🧬 PUNTO 3: MAPEO DE PROTEÍNAS")
     print("=" * 50)
 
-    mapping = map_all_proteins("data/SARS-COV-2-MN908947.3.txt", "data/seq-proteins.txt")
-    for prot, pos in mapping.items():
-        print(f"{prot}: {pos if pos else 'NO encontrado'}")
+    map_all_proteins(files_data["genome"]['Wuhan_2019'], "seq-proteins.txt")
 
-    print("\n⚖️ PUNTO 4: COMPARACIÓN WUHAN vs TEXAS")
+    print("\n⚖️  PUNTO 4: COMPARACIÓN WUHAN vs TEXAS")
     print("=" * 50)
+
+    compare_genomes_table(list(files_data['genome'].keys()),files_data['genome']['Wuhan_2019'],files_data['genome']['Texas_2020'])
+    print()
