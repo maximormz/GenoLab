@@ -96,40 +96,40 @@ El programa ejecuta automáticamente los 4 puntos de análisis:
 🎯 PUNTO 1: BÚSQUEDA DE GENES EN GENOMA
 ==================================================
 
-✅ Gen M: Índices [26522], Primeros 12: "ATGGCAGATTCC...", Ultimos 12: ",...CTTGTACAGTAA"
+✅ Gen M: Índices [26522], 
+   🔤 Primeros y ultimos 12: "ATGGCAGATTCC...CTTGTACAGTAA"
    📏 Longitud del gen: 669 nucleótidos
-✅ Gen S: Índices [21562], Primeros 12: "ATGTTTGTTTTT...", Ultimos 12: ",...CATTACACATAA"
+✅ Gen S: Índices [21562], 
+   🔤 Primeros y ultimos 12: "ATGTTTGTTTTT...CATTACACATAA"
    📏 Longitud del gen: 3822 nucleótidos
-✅ Gen ORF1AB: Índices [265], Primeros 12: "ATGGAGAGCCTT...", Ultimos 12: ",...GTTAACAACTAA"
+✅ Gen ORF1AB: Índices [265], 
+   🔤 Primeros y ultimos 12: "ATGGAGAGCCTT...GTTAACAACTAA"
    📏 Longitud del gen: 21290 nucleótidos
 
 🔄 PUNTO 2: ANÁLISIS DE PALÍNDROMOS MÁS LARGOS
 ==================================================
 
 🧬 Analizando palíndromos en Gen M...
-   💾 Palíndromo guardado en: results/palindrome_gene_M.txt
 --------------------------------------------------
 ✅ Gen M:
    📏 Palíndromo más largo: 11 nucleótidos
-   📍 Posición en el gen: 493
+   📍 Posición del Gen | inicial: 493 final: 503
    🔤 Secuencia: CTAAAGAAATC
    💾 Guardado en: results/palindrome_gene_M.txt
 
 🧬 Analizando palíndromos en Gen S...
-   💾 Palíndromo guardado en: results/palindrome_gene_S.txt
 --------------------------------------------------
 ✅ Gen S:
    📏 Palíndromo más largo: 15 nucleótidos
-   📍 Posición en el gen: 570
+   📍 Posición del Gen | inicial: 570 final: 584
    🔤 Secuencia: GAATTTGTGTTTAAG
    💾 Guardado en: results/palindrome_gene_S.txt
 
 🧬 Analizando palíndromos en Gen ORF1AB...
-   💾 Palíndromo guardado en: results/palindrome_gene_ORF1AB.txt
 --------------------------------------------------
 ✅ Gen ORF1AB:
    📏 Palíndromo más largo: 20 nucleótidos
-   📍 Posición en el gen: 9711
+   📍 Posición del Gen | inicial: 9711 final: 9730
    🔤 Secuencia: CTCAATGACTTCAGTAACTC
    💾 Guardado en: results/palindrome_gene_ORF1AB.txt
 
@@ -182,11 +182,7 @@ analisis-sars-cov2/
 │   ├── palindrome_finder.py    # Algoritmo de palíndromos
 │   └── sequence_translator.py  # Traducción ADN → Proteínas
 │
-├── utils/                       # Utilidades auxiliares
-│   ├── sequence_utils.py       # Manipulación de secuencias
-│   └── output_formatter.py     # Formateo de resultados
-│
-└── results/                     # Archivos de salida generados
+└── results/                     # Archivos de salida generados (Creados al momento de correr el codigo)
     ├── palindromo_gen_M.txt
     ├── palindromo_gen_S.txt
     ├── palindromo_gen_ORF1AB.txt
@@ -208,7 +204,7 @@ def kmp_search_all_occurrences(text, pattern):
 
 ### 2. Expansión desde Centro
 - **Uso**: Búsqueda de palíndromos más largos
-- **Complejidad**: O(n²)
+- **Complejidad**: O(n)
 - **Archivo**: `algorithms/palindrome_finder.py`
 
 ```python
@@ -247,10 +243,10 @@ def compare_genomes_with_codon_analysis(genome1, genome2):
 |----------------------------|-------------------------|
 | Tamaño del genoma          |   ~30,000 nucleótidos   |
 | Genes identificados        |    3/3 (M, S, ORF1AB)   |
-| Palíndromo más largo       | 31 nucleótidos (ORF1AB) |
-| Proteínas mapeadas         |  Todas las principales  |
-| Diferencias Wuhan-Texas    |       8 posiciones      |
-| Mutaciones no sinónimas    |            7            |
+| Palíndromo más largo       | 20 nucleótidos (ORF1AB) |
+| Proteínas mapeadas         |    |
+| Diferencias Wuhan-Texas    |             |
+| Mutaciones no sinónimas    |                      |
 
 ### Rendimiento
 
@@ -262,22 +258,7 @@ def compare_genomes_with_codon_analysis(genome1, genome2):
 | Comparación de genomas  |     ~30 ms    |
 | **Total**               |   **~430 ms**   |
 
-*Medido en: Intel Core i5, 8GB RAM, Python 3.9*
-
-## 🧪 Testing
-
-Para ejecutar pruebas de validación:
-
-```bash
-# Test de algoritmo KMP
-python -m algorithms.string_matching
-
-# Test de palíndromos
-python -m algorithms.palindrome_finder
-
-# Test de traducción
-python -m algorithms.sequence_translator
-```
+*Medido en: Intel Core i7, 32GB RAM, Python 3.9*
 
 ## 🔍 Conceptos Bioinformáticos
 
@@ -287,7 +268,7 @@ Este proyecto implementa los siguientes conceptos:
 - **Palíndromos en ADN**: Secuencias importantes para regulación genética
 - **Marcos de Lectura (ORF)**: Secuencias entre codón inicio y parada
 - **Mutaciones Sinónimas**: Cambios de nucleótidos sin alterar aminoácidos
-- **Complemento Reverso**: Hebra complementaria 3'→5'
+- **Complemento Reverso**: Hebra complementaria 3'→ 5'
 
 ## 📚 Recursos Adicionales
 
@@ -299,7 +280,8 @@ Este proyecto implementa los siguientes conceptos:
 
 - **Maximo Ramírez** - Implementación de KMP y búsqueda de genes
 - **Maximo Ramírez** - Desarrollo de algoritmo de palíndromos
-- **Daniel Orta** - Traducción genética y mapeo de proteínas
+- **Daniel Orta** - Traducción genética
+- **Daniel Orta** - Mapeo de proteínas
 
 ---
 
